@@ -1,0 +1,8 @@
+
+01 DECK 2020-10-18T22:42:09.935
+99 IdDeck Nome Comandante Custo Mana Preço Deck  
+
+99 1 Pé-de-Limo 3 299,50  
+99 2 Atraxa - Praetor´s Voice 4 430,20  
+99 3 Fenax, Deus da Enganação 5 500,20  
+9350000000003
