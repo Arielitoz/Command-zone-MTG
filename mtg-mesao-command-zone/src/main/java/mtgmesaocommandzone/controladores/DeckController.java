@@ -1,5 +1,6 @@
 package mtgmesaocommandzone.controladores;
 
+import com.sun.deploy.nativesandbox.comm.Response;
 import mtgmesaocommandzone.ListaObj;
 import mtgmesaocommandzone.dominios.Deck;
 import mtgmesaocommandzone.repository.DeckRepository;
@@ -28,17 +29,17 @@ public class DeckController {
     //FAZER DELEÇÃO E LIMPEZA DA LISTA E UM PUT
     @GetMapping
     public ResponseEntity getDecks(){
-        return ResponseEntity.ok().body(repositoryDeck.findAll());
+        return ResponseEntity.status(200).body(repositoryDeck.findAll());
     }
 
     @GetMapping("/ramp")
-    public ResponseEntity getCarrosSimples(){
-        return ResponseEntity.ok(repositoryDeck.findAllBaixos());
+    public ResponseEntity getCartasCmcBaixo(){
+        return ResponseEntity.status(200).body(repositoryDeck.findAllBaixos());
     }
 
     @GetMapping("/{idDeck}")
     public ResponseEntity getDeckEspecifico(@PathVariable Integer idDeck){
-        return ResponseEntity.ok(repositoryDeck.findById(idDeck).get());
+        return ResponseEntity.status(200).body(repositoryDeck.findById(idDeck).get());
     }
 
     @GetMapping(value = "/download", produces = MediaType.ALL_VALUE)
@@ -59,20 +60,23 @@ public class DeckController {
         headers.add("Content-Disposition", "attachment, filename = " +"docfinal."+ ext);
         headers.add("Content-Type", "text/csv");
 
-        return new ResponseEntity(new FileSystemResource(dirPath + "docfinal."+ ext), headers, HttpStatus.OK);
+        return new ResponseEntity(new FileSystemResource(dirPath + "docfinal."+ ext), headers, HttpStatus.ACCEPTED);
     }
 
     @PostMapping
     public ResponseEntity criarDeck(@RequestBody Deck deck){
         repositoryDeck.save(deck);
-        return ResponseEntity.created(null).build();
+//        return ResponseEntity.created(null).build();
+        return ResponseEntity.status(201).build();
     }
 
     @DeleteMapping("/{idDeck}")
     public ResponseEntity deletarDeck(@PathVariable Integer idDeck){
         repositoryDeck.delete(repositoryDeck.findById(idDeck).get());
-        return ResponseEntity.ok().build();
+//        return ResponseEntity.ok().build();
+        return ResponseEntity.status(204).build();
     }
+
 
 }
 
@@ -95,4 +99,26 @@ public class DeckController {
 //        headers.add("Content-Type", "text/csv");
 //
 //        return new ResponseEntity(new FileSystemResource(dirPath+arqName), headers, HttpStatus.OK);
+//    }
+
+
+//    @PutMapping("/atualizar/{idDeck}")
+//    public ResponseEntity atualizarDeckComandante(@RequestBody Deck deck, @PathVariable Integer idDeck){
+//        Deck deckAtt = repositoryDeck.findById(idDeck);
+//
+//        if(deckAtt != null){
+//
+//            deckAtt.setIdDeck(deckAtt.getIdDeck());
+//            deckAtt.setTriboCommandante(deckAtt.getTriboCommandante());
+//            deckAtt.setCartas(deckAtt.getCartas());
+//            deckAtt.setPrecoTotalDeck(deckAtt.getPrecoTotalDeck());
+//
+//            repositoryDeck.save(deckAtt);
+//
+//            return ResponseEntity.status(200).body(idDeck);
+//
+//        }else{
+//            return ResponseEntity.status(404).body(idDeck);
+//        }
+//
 //    }

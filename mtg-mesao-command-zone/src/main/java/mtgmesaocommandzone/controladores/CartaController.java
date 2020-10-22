@@ -16,17 +16,17 @@ public class CartaController {
 
     @GetMapping
     public ResponseEntity getCartas(){
-        return ResponseEntity.ok().body(repositoryCarta.findAll());
+        return ResponseEntity.status(200).body(repositoryCarta.findAll());
     }
 
     @GetMapping("/budget")
     public ResponseEntity getCartasBaratas(){
-        return ResponseEntity.ok(repositoryCarta.findAllBaratos());
+        return ResponseEntity.status(200).body(repositoryCarta.findAllBaratos());
     }
 
     @GetMapping("/{idCarta}")
     public ResponseEntity getCartaUnidade(@PathVariable Integer idCarta){
-        return ResponseEntity.ok(repositoryCarta.findById(idCarta).get());
+        return ResponseEntity.status(200).body(repositoryCarta.findById(idCarta).get());
     }
 
     @PostMapping
@@ -38,6 +38,20 @@ public class CartaController {
     @DeleteMapping("/{idCarta}")
     public ResponseEntity deletarDeck(@PathVariable Integer idCarta){
         repositoryCarta.delete(repositoryCarta.findById(idCarta).get());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(204).build();
     }
 }
+
+
+//  if (estabelecimentos.isEmpty()){
+//          return ResponseEntity.status(204).build();
+//          }else{
+//          return ResponseEntity.status(200).body(estabelecimentos);
+//          }
+//
+// if (repositoryCarta.size() >= idCarta){
+//         repositoryCarta.remove(id-1);
+//         return ResponseEntity.status(200).build();
+//         }else{
+//         return ResponseEntity.status(404).build();
+//         }
