@@ -15,11 +15,12 @@ import java.util.List;
 
 public class GravarArquivo {
 
-    public static void gravaRegistro(String nomeArq, String registro) {
-//
+    public static void gravarRegistro(String nameArq, String registro) {
+        //Gravar Registro - Gravar Nome do Arquivo e o tipo de registro
+            //Header, corpo e trailer.
         BufferedWriter saida = null;
         try{
-            saida = new BufferedWriter(new FileWriter(nomeArq, true));
+            saida = new BufferedWriter(new FileWriter(nameArq, true));
         }catch (IOException e){
             System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
         }
@@ -32,51 +33,66 @@ public class GravarArquivo {
 
     }
 
-    public void layoutDocumento(String nomeArq, ListaObj<Deck> decks) {
+    public void docArquivo(String nameArq, ListaObj<Deck> decks, String tipo) {
 
-        String header ="";
-        String corpo = "";
-        String trailer = "";
+        //Variaveis de Registro do Layout - Documento
+        String header = "", body = "", trailer = "";
 
-        //Pegar data -
+        //Var Path diretorio
+        String directory = "src\\main\\resources\\static\\";
+
+        //Pegar data Atual
         LocalDateTime dataHoraAtual = LocalDateTime.now();
 
         //Monta o registro Header
-
-        header += "01 DECK ";
+        header += "01 DECKS ";
         header += dataHoraAtual;
 
         //Grava o registro header
-        gravaRegistro("src\\main\\resources\\static\\" + nomeArq, header);
+        gravarRegistro(directory + nameArq, header);
 
-        //Monta o Corpo
 
-        //1°Registro de Dados
-        corpo += String.format("99 %s %s %s %s  \n", "IdDeck", "Nome Comandante", "Custo Mana", "Preço Deck");
+        //Monta Corpo e Executa o Método Referentes ao TXT
+        if(tipo.equals("txt")){
+            body += String.format("115 %s %s %s %s  \n", "IdDeck", "Nome Comandante", "Custo Mana", "Preço Total");
+            gravarRegistro(directory + nameArq , body);
 
-        gravaRegistro("src\\main\\resources\\static\\" + nomeArq, corpo);
 
-        Integer contRegDados = gravarRegistroDtxt("src\\main\\resources\\static\\" + nomeArq, decks);
+            Integer contadorRegistro = writeTXT(directory + nameArq, decks);
+            trailer += "935";
+            trailer += String.format("%03d", contadorRegistro);
 
-        trailer += "935";
-        trailer += String.format("%010d", contRegDados);
+            //gravar trailer
+            gravarRegistro(directory + nameArq, trailer);
 
-        //gravar trailer
-        gravaRegistro("src\\main\\resources\\static\\" + nomeArq, trailer);
+            //Monta Corpo e Executa o Método Referentes ao CSV
+        }else if(tipo.equals("csv")){
 
+            body += String.format("115 %s %s %s %s  \n", "IdDeck", "Nome Comandante", "Custo Mana", "Preço Total");
+            gravarRegistro(directory + nameArq, body);
+
+
+            Integer contadorRegistro = writeCSV(directory + nameArq, decks);
+            trailer += "935";
+            trailer += String.format("%03d", contadorRegistro);
+
+            //gravar trailer
+            gravarRegistro(directory + nameArq, trailer);
+
+        }
 
     }
+    //Gravar corpo TXT
+    public Integer writeTXT(String nameArq, ListaObj<Deck> decks){
 
-    public Integer gravarRegistroDtxt(String nomeArq, ListaObj<Deck> decks){
-
-        Integer contRegDados = 0;
+        Integer contadorRegistro = 0;
 
         FileWriter nomeArquivo = null;
         Formatter saida = null;
         boolean pane = false;
 
         try{
-            nomeArquivo = new FileWriter( nomeArq,true);
+            nomeArquivo = new FileWriter( nameArq,true);
             saida = new Formatter(nomeArquivo);
         }
         catch (IOException erro){
@@ -87,8 +103,8 @@ public class GravarArquivo {
         try{
             for(Integer item = 0; item < decks.getTamanho(); item++){
                 Deck deck = decks.getElemento(item);
-                saida.format("99 %d %s %d %.2f  \n", deck.getIdDeck(), deck.getNomeCommandante(), deck.getCmcCommander(), deck.getPrecoTotalDeck());
-                contRegDados++;
+                saida.format("99 %3d %12s %10d %.2f  \n", deck.getIdDeck(), deck.getNomeCommandante(), deck.getCmcCommander(), deck.getPrecoTotalDeck());
+                contadorRegistro++;
             }
         }catch (FormatterClosedException error){
             System.err.printf("Erro ao gravar o arquivo");
@@ -107,19 +123,20 @@ public class GravarArquivo {
                 System.exit(1);
             }
         }
-        return contRegDados;
+        return contadorRegistro;
     }
 
-    public Integer gravarRegistroCSV(String nomeArq, ListaObj<Deck> decks){
+    //Gravar corpo CSV
+    public Integer writeCSV(String nameArq, ListaObj<Deck> decks){
 
-        Integer contRegDados = 0;
+        Integer contadorRegistro = 0;
 
         Formatter saida = null;
         boolean pane = false;
         FileWriter nomeArquivo = null;
 
         try{
-            nomeArquivo = new FileWriter( nomeArq,true);
+            nomeArquivo = new FileWriter( nameArq,true);
             saida = new Formatter(nomeArquivo);
         }
         catch (IOException erro){
@@ -131,7 +148,7 @@ public class GravarArquivo {
             for(Integer item = 0; item < decks.getTamanho(); item++){
                 Deck deck = decks.getElemento(item);
                 saida.format("99;%d;%s;%d;%.2f\n", deck.getIdDeck(), deck.getNomeCommandante(), deck.getCmcCommander(), deck.getPrecoTotalDeck());
-                contRegDados++;
+                contadorRegistro++;
             }
         }catch (FormatterClosedException error){
             System.err.printf("Erro ao gravar o arquivo");
@@ -150,10 +167,22 @@ public class GravarArquivo {
                 System.exit(1);
             }
         }
-        return contRegDados;
+        return contadorRegistro;
     }
-
-
 }
+
+
+//        //Monta o Corpo
+//        body += String.format("99 %s %s %s %s  \n", "IdDeck", "Nome Comandante", "Custo Mana", "Preço Deck");
+//
+//        gravarRegistro(diretorio + nameArq, body);
+//
+//        Integer contRegDados = gravarRegistroTXT(diretorio + nameArq, decks);
+//
+//        trailer += "935";
+//        trailer += String.format("%010d", contRegDados);
+//
+//        //gravar trailer
+//        gravarRegistro(diretorio + nameArq, trailer);
 
 

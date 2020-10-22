@@ -2,8 +2,8 @@ insert into Deck
 (id_Deck, nome_Commandante, cmc_Commander, preco_total_deck, tribo_Commandante)
 values
 (null, 'Pé-de-Limo', 3, 299.50, 'Golgari'),
-(null, 'Atraxa - Praetor´s Voice', 4, 430.20,'Crescimento '),
-(null, 'Fenax, Deus da Enganação', 5, 500.20,'Dimir');
+(null, 'Atraxa', 4, 430.20,'Crescimento '),
+(null, 'Fenax', 5, 500.20,'Dimir');
 
 insert into Carta
 (id_carta, nome_carta, cor_tribo, habilidade, preco_carta, FK_DECK)

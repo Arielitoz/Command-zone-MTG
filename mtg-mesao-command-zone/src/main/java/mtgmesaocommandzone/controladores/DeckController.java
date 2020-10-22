@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class DeckController {
     @Autowired
     private DeckRepository repositoryDeck;
 
+
+    //ARRUMAR MÉTODOS HTTP - Response
+    //FAZER DELEÇÃO E LIMPEZA DA LISTA E UM PUT
     @GetMapping
     public ResponseEntity getDecks(){
         return ResponseEntity.ok().body(repositoryDeck.findAll());
@@ -38,7 +42,7 @@ public class DeckController {
     }
 
     @GetMapping(value = "/download", produces = MediaType.ALL_VALUE)
-    public ResponseEntity gravarDeck(){
+    public ResponseEntity gravarDeckCSV(@PathParam("ext")String ext){ //Pathparam , ulr /download?ext=
         List<Deck> decks = repositoryDeck.findAll();
         ListaObj<Deck> deck = new ListaObj<Deck>(repositoryDeck.contarReg());
         for (int i = 0; i < decks.size(); i++) {
@@ -46,16 +50,16 @@ public class DeckController {
         }
 
         String dirPath = "src\\main\\resources\\static\\";
-        String arqName = "docFinal.txt";
+
 
             GravarArquivo ga = new GravarArquivo();
-            ga.layoutDocumento(arqName , deck);
+            ga.docArquivo("docfinal."+ ext , deck,ext);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment, filename = " +arqName );
+        headers.add("Content-Disposition", "attachment, filename = " +"docfinal."+ ext);
         headers.add("Content-Type", "text/csv");
 
-        return new ResponseEntity(new FileSystemResource(dirPath+arqName), headers, HttpStatus.OK);
+        return new ResponseEntity(new FileSystemResource(dirPath + "docfinal."+ ext), headers, HttpStatus.OK);
     }
 
     @PostMapping
@@ -71,3 +75,24 @@ public class DeckController {
     }
 
 }
+
+//    @GetMapping(value = "/download/txt", produces = MediaType.ALL_VALUE)
+//    public ResponseEntity gravarDeckTXT(){
+//        List<Deck> decks = repositoryDeck.findAll();
+//        ListaObj<Deck> deck = new ListaObj<Deck>(repositoryDeck.contarReg());
+//        for (int i = 0; i < decks.size(); i++) {
+//            deck.adiciona(decks.get(i));
+//        }
+//
+//        String dirPath = "src\\main\\resources\\static\\";
+//        String arqName = "docFinal.txt";
+//
+//        GravarArquivo ga = new GravarArquivo();
+//        ga.gravarRegistroCSV(arqName , deck);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Content-Disposition", "attachment, filename = " +arqName );
+//        headers.add("Content-Type", "text/csv");
+//
+//        return new ResponseEntity(new FileSystemResource(dirPath+arqName), headers, HttpStatus.OK);
+//    }

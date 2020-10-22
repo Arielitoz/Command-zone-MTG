@@ -2,8 +2,10 @@ package mtgmesaocommandzone.dominios;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ManyToAny;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class Deck {
     private Integer idDeck;
 
     //nome do comandante, carta principal do deck;
+    @Size(max = 12)
     private String nomeCommandante;
 
     //Tribo Commandante - cor
