@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -43,24 +45,29 @@ public class DeckController {
     }
 
     @GetMapping(value = "/download", produces = MediaType.ALL_VALUE)
-    public ResponseEntity gravarDeckCSV(@PathParam("ext")String ext){ //Pathparam , ulr /download?ext=
+    public ResponseEntity gravarDeck(@PathParam("ext")String ext){ //Pathparam , ulr /download?ext= csv || txt
+
+        Date dataDeHoje = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat(
+                "ddMMyyyy-HHmmss");
+
         List<Deck> decks = repositoryDeck.findAll();
         ListaObj<Deck> deck = new ListaObj<Deck>(repositoryDeck.contarReg());
         for (int i = 0; i < decks.size(); i++) {
             deck.adiciona(decks.get(i));
         }
 
-        String dirPath = "src\\main\\resources\\static\\";
-
+        String directory = "src\\main\\resources\\static\\";
+      String  archive = String.format("docfinal-%s."+ext, (formatter.format(dataDeHoje)));
 
             GravarArquivo ga = new GravarArquivo();
-            ga.docArquivo("docfinal."+ ext , deck,ext);
+            ga.docArchive(archive , deck,ext);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment, filename = " +"docfinal."+ ext);
+        headers.add("Content-Disposition", "attachment, filename = " +archive);
         headers.add("Content-Type", "text/csv");
 
-        return new ResponseEntity(new FileSystemResource(dirPath + "docfinal."+ ext), headers, HttpStatus.ACCEPTED);
+        return new ResponseEntity(new FileSystemResource(directory + archive), headers, HttpStatus.ACCEPTED);
     }
 
     @PostMapping
@@ -76,8 +83,6 @@ public class DeckController {
 //        return ResponseEntity.ok().build();
         return ResponseEntity.status(204).build();
     }
-
-
 }
 
 //    @GetMapping(value = "/download/txt", produces = MediaType.ALL_VALUE)

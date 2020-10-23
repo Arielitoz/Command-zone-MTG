@@ -33,10 +33,8 @@ public class GravarArquivo {
 
     }
 
-    public void docArquivo(String nameArq, ListaObj<Deck> decks, String tipo) {
-
-        //Variaveis de Registro do Layout - Documento
-        String header = "", body = "", trailer = "";
+    public void docArchive(String nameArq, ListaObj<Deck> decks, String tipo) {
+        String  body = "", trailer = "";
 
         //Var Path diretorio
         String directory = "src\\main\\resources\\static\\";
@@ -44,19 +42,21 @@ public class GravarArquivo {
         //Pegar data Atual
         LocalDateTime dataHoraAtual = LocalDateTime.now();
 
-        //Monta o registro Header
-        header += "01 DECKS ";
-        header += dataHoraAtual;
-
-        //Grava o registro header
-        gravarRegistro(directory + nameArq, header);
-
-
         //Monta Corpo e Executa o Método Referentes ao TXT
         if(tipo.equals("txt")){
+
+            //Variaveis de Registro do Layout - Documento
+            String header = "";
+
+            //Monta o registro Header
+            header += "01 DECKS ";
+            header += dataHoraAtual;
+
+            //Grava o registro header
+            gravarRegistro(directory + nameArq, header);
+
             body += String.format("115 %s %s %s %s  \n", "IdDeck", "Nome Comandante", "Custo Mana", "Preço Total");
             gravarRegistro(directory + nameArq , body);
-
 
             Integer contadorRegistro = writeTXT(directory + nameArq, decks);
             trailer += "935";
@@ -65,22 +65,15 @@ public class GravarArquivo {
             //gravar trailer
             gravarRegistro(directory + nameArq, trailer);
 
+
             //Monta Corpo e Executa o Método Referentes ao CSV
         }else if(tipo.equals("csv")){
 
-            body += String.format("115 %s %s %s %s  \n", "IdDeck", "Nome Comandante", "Custo Mana", "Preço Total");
+            body += String.format("15 %s %s %s %s  \n", "IdDeck", "Nome Comandante", "Custo Mana", "Preço Total");
             gravarRegistro(directory + nameArq, body);
-
-
-            Integer contadorRegistro = writeCSV(directory + nameArq, decks);
-            trailer += "935";
-            trailer += String.format("%03d", contadorRegistro);
-
-            //gravar trailer
-            gravarRegistro(directory + nameArq, trailer);
+            writeCSV(directory + nameArq, decks);
 
         }
-
     }
     //Gravar corpo TXT
     public Integer writeTXT(String nameArq, ListaObj<Deck> decks){
@@ -103,7 +96,7 @@ public class GravarArquivo {
         try{
             for(Integer item = 0; item < decks.getTamanho(); item++){
                 Deck deck = decks.getElemento(item);
-                saida.format("99 %3d %12s %10d %.2f  \n", deck.getIdDeck(), deck.getNomeCommandante(), deck.getCmcCommander(), deck.getPrecoTotalDeck());
+                saida.format("99 %7d %-15s %10d %10.2f  \n", deck.getIdDeck(), deck.getNomeCommandante(), deck.getCmcCommander(), deck.getPrecoTotalDeck());
                 contadorRegistro++;
             }
         }catch (FormatterClosedException error){
@@ -171,18 +164,5 @@ public class GravarArquivo {
     }
 }
 
-
-//        //Monta o Corpo
-//        body += String.format("99 %s %s %s %s  \n", "IdDeck", "Nome Comandante", "Custo Mana", "Preço Deck");
-//
-//        gravarRegistro(diretorio + nameArq, body);
-//
-//        Integer contRegDados = gravarRegistroTXT(diretorio + nameArq, decks);
-//
-//        trailer += "935";
-//        trailer += String.format("%010d", contRegDados);
-//
-//        //gravar trailer
-//        gravarRegistro(diretorio + nameArq, trailer);
 
 
