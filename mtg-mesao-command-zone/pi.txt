@@ -1,0 +1,12 @@
+______________
+Inovação: Receber notificação de produtos por mercados próximos ou por mercado.
+______________
+Endpoint - Calculo , gravar numa tabela auxiliar.
+
+
+header
+div cep
+destaques
+promos
+estabelecimentos
+footer

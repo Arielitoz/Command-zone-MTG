@@ -29,7 +29,7 @@ public class Deck {
 
     private Double precoTotalDeck;
 
-    @OneToMany(mappedBy = "fkDeck", orphanRemoval = true)
+    @OneToMany(mappedBy = "fkDeck")
     private List<Carta> cartas;
 
     public Integer getIdDeck() {
@@ -78,5 +78,17 @@ public class Deck {
 
     public void setCartas(List<Carta> cartas) {
         this.cartas = cartas;
+    }
+
+    @Override
+    public String toString() {
+        return "Deck{" +
+                "idDeck=" + idDeck +
+                ", nomeCommandante='" + nomeCommandante + '\'' +
+                ", triboCommandante='" + triboCommandante + '\'' +
+                ", cmcCommander=" + cmcCommander +
+                ", precoTotalDeck=" + precoTotalDeck +
+                ", cartas=" + cartas +
+                '}';
     }
 }

@@ -26,9 +26,6 @@ public class DeckController {
     @Autowired
     private DeckRepository repositoryDeck;
 
-
-    //ARRUMAR MÉTODOS HTTP - Response
-    //FAZER DELEÇÃO E LIMPEZA DA LISTA E UM PUT
     @GetMapping
     public ResponseEntity getDecks(){
         return ResponseEntity.status(200).body(repositoryDeck.findAll());

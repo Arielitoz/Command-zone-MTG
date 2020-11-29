@@ -3,6 +3,7 @@ package mtgmesaocommandzone.controladores;
 import mtgmesaocommandzone.dominios.Carta;
 import mtgmesaocommandzone.dominios.Deck;
 import mtgmesaocommandzone.repository.CartaRepository;
+import mtgmesaocommandzone.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,9 @@ public class CartaController {
 
     @Autowired
     private CartaRepository repositoryCarta;
+
+    @Autowired
+    private DeckRepository repositoryDeck;
 
     @GetMapping
     public ResponseEntity getCartas(){
@@ -29,14 +33,19 @@ public class CartaController {
         return ResponseEntity.status(200).body(repositoryCarta.findById(idCarta).get());
     }
 
-    @PostMapping
-    public ResponseEntity criarDeck(@RequestBody Carta carta){
-        repositoryCarta.save(carta);
-        return ResponseEntity.created(null).build();
+    @PostMapping("/{idDeck}")
+    public ResponseEntity criarCarta(@RequestBody Carta carta, @PathVariable Integer idDeck){
+
+        Deck deck =  repositoryDeck.findById(idDeck).get();
+        carta.setFkDeck(deck);
+
+        Carta card = repositoryCarta.save(carta);
+        return ResponseEntity.created(null).body(card);
+
     }
 
     @DeleteMapping("/{idCarta}")
-    public ResponseEntity deletarDeck(@PathVariable Integer idCarta){
+    public ResponseEntity deletarCarta(@PathVariable Integer idCarta){
         repositoryCarta.delete(repositoryCarta.findById(idCarta).get());
         return ResponseEntity.status(204).build();
     }

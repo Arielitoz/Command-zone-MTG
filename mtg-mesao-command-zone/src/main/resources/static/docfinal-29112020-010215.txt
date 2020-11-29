@@ -1,0 +1,7 @@
+01 DECKS 2020-11-29T01:02:15.190
+115 IdDeck Nome Comandante Custo Mana Preço Total  
+
+99 |       1 | Pé-de-Limo      |          3 |     299,50  
+99 |       2 | Atraxa          |          4 |     430,20  
+99 |       3 | Fenax           |          5 |     500,20  
+935003

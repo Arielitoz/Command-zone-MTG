@@ -79,4 +79,13 @@ public class Carta {
     public void setHabilidade(String habilidade) {
         this.habilidade = habilidade;
     }
+
+    @Override
+    public String toString() {
+        return "Carta: " +
+                "\nNome Carta:'" + nomeCarta + '\'' +
+                "\nCor Tribo; '" + corTribo + '\'' +
+                "\nHabilidade: " + habilidade + '\'' +
+                "\nPreço Carta: " + precoCarta + "\n";
+    }
 }

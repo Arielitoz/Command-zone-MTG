@@ -96,7 +96,7 @@ public class GravarArquivo {
         try{
             for(Integer item = 0; item < decks.getTamanho(); item++){
                 Deck deck = decks.getElemento(item);
-                saida.format("99 %7d %-15s %10d %10.2f  \n", deck.getIdDeck(), deck.getNomeCommandante(), deck.getCmcCommander(), deck.getPrecoTotalDeck());
+                saida.format("99|%d|%s|%d|%.2f  \n", deck.getIdDeck(), deck.getNomeCommandante(), deck.getCmcCommander(), deck.getPrecoTotalDeck());
                 contadorRegistro++;
             }
         }catch (FormatterClosedException error){
