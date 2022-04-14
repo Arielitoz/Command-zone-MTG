@@ -1,5 +1,5 @@
 package mtgmesaocommandzone.dominios.enums;
 
 public enum raridadeCarta {
-    COMUM, INCOMUM, RARO, MÍTICO_RARO;
+    COMUM, INCOMUM, RARO, MITICO_RARO;
 }
